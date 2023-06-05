@@ -7,6 +7,7 @@ class Prodotto{
     public $immagine;
     public $categoria;
     public $tipo;
+    use Sconto;
 
     public function __construct($id,$nome,$prezzo,$immagine,$categoria,$tipo){
         $this->id = $id;
@@ -29,6 +30,19 @@ class Categoria{
     }
 }
 
+trait Sconto {
+    public function applicaSconto($percentuale) {
+        $this->prezzo = $this->prezzo - ($this->prezzo * $percentuale / 100);
+    }
+}
+
+// class ProdottoNonTrovato extends Exception {
+//     public function __construct($message = "Prodotto non trovato.", $code = 0) {
+//         parent::__construct($message, $code);
+//     }
+// }
+
+
 //creazione istanza categoria
 $categoriaCani = new Categoria(1,'Cane');
 $categoriaGatti = new Categoria(2,'Gatto');
@@ -40,7 +54,7 @@ $prodotti = [
     new Prodotto(3,'Cibo cani',12,"https://picsum.photos/id/237/200/300",$categoriaCani,'Palla'),
     new Prodotto(4,'Cibo gatti',10,"https://picsum.photos/id/237/200/300",$categoriaGatti,'Spago'),
 ];
-var_dump($prodotti);
+
 ?>
 
 <!DOCTYPE html>
@@ -61,6 +75,10 @@ var_dump($prodotti);
                 <h5 class="card-title"><?php echo $elem->nome?></h5>
                 <p class="card-text"><?php echo $elem->categoria->nome?></p>
                 <p class="card-text"><?php echo $elem->prezzo?></p>
+                <?php
+                $elem->applicaSconto(10); // Applica uno sconto del 10%
+                ?>
+                <p class="card-text">Prezzo scontato: <?php echo $elem->prezzo ?></p>
                 <p class="card-text"><?php echo $elem->tipo?></p>
                 <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
